@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.IO;
+using System.Threading.Tasks;
 
 /*
  * 
@@ -36,12 +37,15 @@ namespace ModernCS
             InitializeComponent();
         }
 
-        private void ButtonClick(object sender, RoutedEventArgs e)
+        private async void ButtonClick(object sender, RoutedEventArgs e)
         {
-            var directories = Directory.GetDirectories(@"C:\");
+            Liste.Items.Clear();
+            var directories = Directory.GetDirectories(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
+
             //Ab hier wird ein neuer Thread gestartet und der Rest als Continuation ausgeführt
             //Die Continuation wird jedoch IM AKTUELLEN CONTEXT, d.h. ohne Cross-Threading Probleme, ausgeführt werden
             await SearchDirectories(directories);
+
             Liste.Items.Add("Suche abgeschlossen!");
         }
 
@@ -50,9 +54,24 @@ namespace ModernCS
             cancel = true;
         }
 
-        private async void SearchDirectories(string[] directories)
+        private async Task<int> ReadFileLengthAsync(string file)
         {
-            //Gehen über all Verzeichne - könnten wir auch Rekursiv machen
+            //Better be safe than sorry - könnten hier auch einige Abfragen machen,
+            //aber dies ist quick and dirty
+            try
+            {
+                var length = await Task.Run(() => File.ReadAllBytes(file).Length);
+                return length;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+        private async Task<bool> SearchDirectories(string[] directories)
+        {
+            //Gehen über all Verzeichnisse
             foreach (var directory in directories)
             {
                 //Größe merken
@@ -64,7 +83,7 @@ namespace ModernCS
                 foreach (var file in files)
                 {
                     //Größe auslesen (asynchron!) und hinzufügen
-                    size += await File.ReadAllBytes(file).Length;
+                    size += await ReadFileLengthAsync(file);
 
                     //--- Ab hier ist wieder Continuation im UI Thread Kontext---
 
@@ -73,13 +92,25 @@ namespace ModernCS
                     {
                         cancel = false;
                         Liste.Items.Add("Suche abgebrochen!");
-                        return;
+                        return true;
                     }
                 }
 
                 //Hier wird die Ausgabe geschrieben
                 Liste.Items.Add("Verzeichnis {" + directory + "} mit " + size + " Bytes");
+
+                //Anschließend in die Unterverzeichnisse rein
+                var subdirectories = Directory.GetDirectories(directory);
+                //Wurde das Cancel ausgelesen?! Wir setzen es anschließend zurück, daher brauchen
+                //wir einen zweiten Indikator (Rückgabewert)
+                var cancelled = await SearchDirectories(subdirectories);
+
+                if (cancelled)
+                    return true;
             }
+
+            //Sind wir soweit gekommen, wurde anscheinend nicht gecancelled
+            return false;
         }
     }
 }

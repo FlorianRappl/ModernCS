@@ -1,0 +1,19 @@
+﻿<Window x:Class="ModernCS.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <ListBox Margin="10" Name="Liste" Grid.Row="1" />
+        <Button Content="Operation starten" Margin="10" HorizontalAlignment="Left"
+                Name="Button" VerticalAlignment="Top" Click="ButtonClick" />
+        <Button Content="Operation abbrechen" Margin="10" HorizontalAlignment="Right"
+                Name="CancelButton" VerticalAlignment="Top" Click="CancelClick" />
+    </Grid>
+</Window>

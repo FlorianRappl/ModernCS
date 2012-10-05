@@ -1,0 +1,10 @@
+﻿<Window x:Class="ModernCS.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <Label Content="" Height="79" HorizontalAlignment="Center" Margin="169,81,146,0" Name="MyLabel" VerticalAlignment="Top" Width="188" />
+        <Button Content="Starte Synchron" Height="23" HorizontalAlignment="Center" Margin="169,175,146,0" Name="Synchron" VerticalAlignment="Top" Width="188" />
+        <Button Content="Starte Asynchron" Height="23" HorizontalAlignment="Center" Margin="169,213,146,0" Name="Asynchron" VerticalAlignment="Top" Width="188" />
+    </Grid>
+</Window>

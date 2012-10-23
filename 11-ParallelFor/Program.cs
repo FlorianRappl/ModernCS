@@ -15,7 +15,7 @@ namespace ModernCS
 {
     class Program
     {
-        const int ITERATIONS = 100000000;
+        const int ITERATIONS = 300000000;
 
         static void Main(string[] args)
         {
@@ -31,7 +31,7 @@ namespace ModernCS
             timer.Stop();
             Console.WriteLine("Benötigte Zeit: {0}ms", timer.ElapsedMilliseconds);
             var precision = Math.Abs(Math.PI - pi);
-            Console.WriteLine("Pi konnte mit einer Genauigkeit von {0} ermittelt werden.", precision);
+            Console.WriteLine("Pi ({1}) konnte mit einer Genauigkeit von {0} ermittelt werden.", precision, pi);
         }
 
         static double SerialCode()

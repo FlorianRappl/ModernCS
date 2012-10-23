@@ -67,7 +67,7 @@ namespace ModernCS
             int[] numbers = new[] { 1, 2, 3, 4, 5, 6, 7, 10 };
 
             //Erwartet: 1, 4, 9, 16, 25, 36, 49, 100
-            var result = numbers.Select(m => (m * m).ToString());
+            var result = numbers.Select(m => m * m);
 
             numbers[0] = 0; //1 -> 0
             numbers[6] = 9; //7 -> 9

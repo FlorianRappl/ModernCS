@@ -18,7 +18,7 @@ namespace ModernCS
             //Analog zu C++ erstellt man in C# neue Objekte über new () --> wobei hier Speicher alloziiert wird und sofort der Konstruktor aufgerufen wird
             //Es gibt immer mind. einen Konstruktor - wenn wir keinen angeben, wird automatisch ein leerer Standardkonstruktor erstellt
             Kunde neuerKunde = new Kunde("Hans Mustermann");
-
+            
             Console.Write("Der Name des Kunden: ");
             //Verwenden eines Getters im C++ Stils - wie eine Funktion
             Console.WriteLine(neuerKunde.GetName());

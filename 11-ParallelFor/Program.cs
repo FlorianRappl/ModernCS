@@ -15,7 +15,7 @@ namespace ModernCS
 {
     class Program
     {
-        const int ITERATIONS = 300000000;
+        const int ITERATIONS = 5000000;
 
         static void Main(string[] args)
         {
@@ -23,46 +23,48 @@ namespace ModernCS
             Benchmark(() => ParallelCode());
         }
 
-        private static void Benchmark(Func<double> method)
+        private static void Benchmark(Func<decimal> method)
         {
             Stopwatch timer = new Stopwatch();
             timer.Start();
             var pi = method();
             timer.Stop();
             Console.WriteLine("Benötigte Zeit: {0}ms", timer.ElapsedMilliseconds);
-            var precision = Math.Abs(Math.PI - pi);
+            var precision = Math.Abs((decimal)Math.PI - pi);
             Console.WriteLine("Pi ({1}) konnte mit einer Genauigkeit von {0} ermittelt werden.", precision, pi);
         }
 
-        static double SerialCode()
+        static decimal SerialCode()
         {
-            var sum = 0.0;
-            var step = 1.0 / (double)ITERATIONS; 
+            var sum = 0m;
+            var step = 1m / (decimal)ITERATIONS; 
 
             for(var i = 0; i < ITERATIONS; i++)
             {
-                double x = (i + 0.5) * step;
-                sum = sum + 4.0 / (1.0 + x * x); 
+                decimal x = (i + 0.5m) * step;
+                sum = sum + 4m / (1m + x * x); 
             }
 
             return sum * step;
         }
 
-        static double ParallelCode()
+        static decimal ParallelCode()
         {
-            var sum = 0.0;
-            var step = 1.0 / (double)ITERATIONS;
+            var sum = 0m;
+            var step = 1m / (decimal)ITERATIONS;
             //Brauchen wir nur zum Locken - da müssen wir eine Speicheradresse / Referenz angeben
-            var monitor = new object();
+            var monitor = new Object();
 
-            Parallel.For(0, ITERATIONS, () => 0.0, (i, state, local) =>
+            Parallel.For(0, ITERATIONS, () => 0m, (i, state, local) =>
             {
-                double x = (i + 0.5) * step;
-                return local + 4.0 / (1.0 + x * x);
+                decimal x = (i + 0.5m) * step;
+                return local + 4m / (1m + x * x);
             }, local => 
             {
-                lock (monitor) 
+                lock (monitor)
+                {
                     sum += local;
+                }
             });
 
             return sum * step;
